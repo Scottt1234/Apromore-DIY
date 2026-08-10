@@ -490,24 +490,6 @@
     .setup-eyebrow { font-size: 12px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--sf-blue-l); margin-bottom: 14px; }
     .setup-title { font-family: var(--font-display); font-size: clamp(26px, 4.4vw, 44px); font-weight: 700; color: #fff; letter-spacing: -0.02em; line-height: 1.12; margin: 0 0 34px; }
 
-    /* Oversized Apromore mark behind the setup content: centred, larger than
-       the viewport, balls orbiting slowly. Low opacity + a slow fade-in keeps
-       it atmospheric rather than competing with the text on top. */
-    .setup-mark {
-      position: absolute; left: 50%; top: 50%; width: max(115vh, 115vw); height: auto;
-      transform: translate(-50%, -50%);
-      opacity: 0; pointer-events: none;
-      animation: setupMarkIn 1.6s 0.2s ease forwards;
-    }
-    @keyframes setupMarkIn { to { opacity: 0.11; } }
-    @keyframes cmSpin { to { transform: rotate(360deg); } }
-    .setup-mark .sm-orbit { transform-box: fill-box; transform-origin: center; animation: cmSpin 90s linear infinite; }
-    .setup-inner { position: relative; }   /* content sits above the mark */
-    @media (prefers-reduced-motion: reduce) {
-      .setup-mark { animation: none; opacity: 0.11; }
-      .setup-mark .sm-orbit { animation: none; }
-    }
-
     /* Narration accent selector (sits below the mode cards, above the help note) */
     .setup-accent { display: flex; align-items: center; justify-content: center; gap: 14px; flex-wrap: wrap; margin: 0 0 24px; }
     .setup-accent-label { font-size: 13px; font-weight: 600; letter-spacing: 0.04em; color: rgba(255,255,255,0.66); }
@@ -646,6 +628,71 @@
     .slide[data-section="The Common Thread"].s3-tagline-in .s3-tagline { opacity: 1; transform: none; }
   </style>
 
+  <!-- ════════ AI VARIANT — slides 2 & 3 rebuilt around the AI story ════════ -->
+  <style>
+    /* ── Slide 2 · promise vs reality ──────────────────────────────── */
+    .pr-list { list-style: none; margin: 14px 0 0; padding: 0; display: flex; flex-direction: column; gap: 11px; }
+    .pr-item { display: flex; align-items: flex-start; gap: 10px; font-size: 13.5px; line-height: 1.5; color: rgba(255,255,255,0.78); }
+    .pr-item strong { color: #fff; }
+    .pr-glyph { flex-shrink: 0; width: 18px; height: 18px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-top: 1px; }
+    .pr-glyph svg { display: block; }
+    .pr-glyph--yes { background: rgba(95,227,160,0.12); color: #7be8ad; border: 1px solid rgba(95,227,160,0.4); }
+    .pr-glyph--no  { background: rgba(255,194,77,0.10); color: #ffd98a; border: 1px solid rgba(255,194,77,0.4); }
+    /* the 95% proof card — one number does the arguing */
+    .pr-stat { display: flex; flex-direction: column; justify-content: center; text-align: center; }
+    .pr-stat-n {
+      font-family: var(--font-display); font-weight: 700; line-height: 1;
+      font-size: clamp(58px, 6.2vw, 92px); letter-spacing: -0.03em; color: var(--sf-blue-l);
+      text-shadow: 0 0 34px rgba(143,184,255,0.4);
+    }
+    .pr-stat-k { font-size: 15px; font-weight: 700; color: #fff; line-height: 1.5; margin: 14px auto 0; max-width: 24ch; }
+    .pr-stat-src { font-size: 11.5px; font-style: italic; color: rgba(255,255,255,0.45); margin-top: 16px; }
+    .slide[data-section="The Pressures"] .s2-statement { margin-top: 30px; }
+    /* breathing room between title and cards (slides 2 & 3 match) */
+    .slide[data-section="The Pressures"] .card-grid-3 { margin-top: 36px; }
+
+    /* ── Slide 3 · the 10-20-70 iceberg ────────────────────────────── */
+    .s3-split { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 40px; align-items: start; margin: 36px 0 6px; }
+    /* the 10/20/70 rows reuse .thread-card so the deck's beat spotlight works */
+    .s3-split .thread { display: flex; flex-direction: column; gap: 12px !important; margin: 0 !important; }
+    .tw-row { flex-direction: row !important; align-items: center; gap: 20px; padding: 12px 18px !important; }
+    .tw-pct {
+      font-family: var(--font-display); font-weight: 700; line-height: 1;
+      font-size: clamp(34px, 3.4vw, 48px); letter-spacing: -0.02em; color: var(--sf-blue-l);
+      min-width: 2.6ch; text-align: right; flex-shrink: 0;
+    }
+    .tw-copy .card-title { margin: 0 0 3px !important; }
+    .tw-copy .thread-text { font-size: 13.5px; font-weight: 500; color: rgba(255,255,255,0.72); }
+    /* "…but" stat node — revealed on beat 5 by the existing .cv-node machinery */
+    .slide[data-section="The Common Thread"] .cv-node { margin: 16px 0 0 !important; text-align: left; width: auto; max-width: none; box-sizing: border-box; }
+    .cv-node .cv-node-big { color: var(--sf-blue-l); font-family: var(--font-display); font-size: 26px; letter-spacing: -0.01em; margin-right: 6px; }
+    .cv-node .cv-node-src { display: block; font-size: 10.5px; font-weight: 500; font-style: italic; color: rgba(255,255,255,0.5); margin-top: 5px; }
+    /* iceberg */
+    .iceberg-wrap { position: relative; margin-top: 0; }
+    .iceberg { width: 100%; max-width: 440px; height: auto; display: block; margin: 0 auto; }
+    .slide[data-section="The Common Thread"] .s3-tagline { margin-top: 20px; }
+    .s3-split .statement { font-size: clamp(18px, 1.8vw, 24px); }
+    @keyframes ibBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+    .ib-berg { animation: ibBob 8s ease-in-out infinite; }
+    .ib-f { transition: opacity .5s ease, filter .5s ease; }
+    .ib-label text { font-family: var(--font-body); }
+    .ib-pct { font-family: var(--font-display); font-weight: 700; font-size: 26px; fill: #fff; letter-spacing: -0.02em; }
+    .ib-word { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; fill: rgba(255,255,255,0.55); }
+    .ib-lead { stroke: rgba(143,184,255,0.55); stroke-width: 1.5; fill: none; }
+    /* beat-sync: as each 10/20/70 row is narrated, its slice of the iceberg lights up */
+    .slide:has(.tw-row:nth-child(1).beat-spot) .ib-above  { filter: brightness(1.25) drop-shadow(0 0 14px rgba(200,228,255,0.65)); }
+    .slide:has(.tw-row:nth-child(2).beat-spot) .ib-band   { filter: brightness(1.35) drop-shadow(0 0 14px rgba(143,184,255,0.7)); }
+    .slide:has(.tw-row:nth-child(3).beat-spot) .ib-sub    { filter: brightness(1.4) drop-shadow(0 0 18px rgba(80,150,255,0.75)); }
+    .slide:has(.tw-row.beat-spot) .ib-berg { animation-play-state: paused; }
+
+    @media (max-width: 900px) {
+      .s3-split { grid-template-columns: 1fr; gap: 26px; }
+      .iceberg { max-width: 320px; }
+      .tw-pct { min-width: auto; }
+    }
+    @media (prefers-reduced-motion: reduce) { .ib-berg { animation: none; } }
+  </style>
+
 </head>
 <body>
 
@@ -673,122 +720,152 @@
       </div>
     </div>
 
-    <!-- ═══ SLIDE 2 · THREE PRESSURES ═══════════════════════════════ -->
+    <!-- ═══ SLIDE 2 · THE AI PROMISE — promise vs reality vs proof ═══ -->
     <div class="slide sd" data-section="The Pressures">
       <div class="slide-body">
-        <div class="eyebrow" data-animate="fade-up" data-anim-delay="0">Decisions that matter</div>
-        <div class="section-title" data-animate="fade-up" data-anim-delay="60">Common decisions where the stakes are high.</div>
-        <div class="section-sub" data-animate="fade-up" data-anim-delay="120">Most organisations are facing at least one of these right now. Many are facing all three.</div>
+        <div class="eyebrow" data-animate="fade-up" data-anim-delay="0">The AI promise</div>
+        <div class="section-title" data-animate="fade-up" data-anim-delay="60">The AI promise<br/><span style="color:var(--sf-blue-l)">Hasn&rsquo;t delivered yet.</span></div>
         <div class="card-grid-3">
 
           <div class="card card-accent-blue pressure-card" data-animate="scale-in" data-anim-delay="200">
-            <span class="p-index">01</span>
-            <div class="ci ci-blue" style="width:52px;height:52px;" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6">
-                <circle cx="16" cy="16" r="11"/><circle cx="16" cy="16" r="6"/>
-                <circle cx="16" cy="16" r="1.7" fill="currentColor" stroke="none"/>
-              </svg>
-            </div>
-            <div class="card-title" style="margin-top:14px;">AI Deployment</div>
-            <div class="p-lead">Where to deploy AI, not if.</div>
-            <div class="card-body">The opportunity isn't to slow down. It's to know where to aim.</div>
-            <div class="p-punch">Almost everyone&rsquo;s AI will go live.<br/>Not everyone&rsquo;s will matter.</div>
+            <span class="ew-tag ew-tag--best" style="position:static;align-self:flex-start;">The promise</span>
+            <div class="card-title" style="margin-top:14px;">What is expected of AI</div>
+            <ul class="pr-list">
+              <li class="pr-item"><span class="pr-glyph pr-glyph--yes"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5l2.5 2.5L10 3"/></svg></span><span><strong>100% automation</strong> of routine work</span></li>
+              <li class="pr-item"><span class="pr-glyph pr-glyph--yes"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5l2.5 2.5L10 3"/></svg></span><span>AI doing the <strong>grunt work</strong></span></li>
+              <li class="pr-item"><span class="pr-glyph pr-glyph--yes"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5l2.5 2.5L10 3"/></svg></span><span>Humans doing the <strong>strategic work</strong></span></li>
+              <li class="pr-item"><span class="pr-glyph pr-glyph--yes"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 6.5l2.5 2.5L10 3"/></svg></span><span><strong>Continuous improvement</strong>, compounding</span></li>
+            </ul>
           </div>
 
           <div class="card card-accent-blue pressure-card" data-animate="scale-in" data-anim-delay="280">
-            <span class="p-index">02</span>
-            <div class="ci ci-blue" style="width:52px;height:52px;" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M16 6.5V25"/><path d="M9 25h14"/><path d="M5.5 11h21"/>
-                <path d="M5.5 11l-3 6a3 3 0 0 0 6 0z"/><path d="M26.5 11l-3 6a3 3 0 0 0 6 0z"/>
-                <circle cx="16" cy="8.3" r="1.5" fill="currentColor" stroke="none"/>
-              </svg>
-            </div>
-            <div class="card-title" style="margin-top:14px;">Cost Pressure</div>
-            <div class="p-lead">Reducing cost without reducing capability.</div>
-            <div class="card-body">Cost decisions are moving faster than the data that should support them.</div>
-            <div class="p-punch">The most expensive cuts are the ones you have to reverse.</div>
+            <span class="ew-tag ew-tag--worst" style="position:static;align-self:flex-start;">Today&rsquo;s reality</span>
+            <div class="card-title" style="margin-top:14px;">The reality of most projects</div>
+            <ul class="pr-list">
+              <li class="pr-item"><span class="pr-glyph pr-glyph--no"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l6 6M9 3l-6 6"/></svg></span><span><strong>20% automation</strong>, at best</span></li>
+              <li class="pr-item"><span class="pr-glyph pr-glyph--no"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l6 6M9 3l-6 6"/></svg></span><span>Prompts that <strong>fail in production</strong></span></li>
+              <li class="pr-item"><span class="pr-glyph pr-glyph--no"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l6 6M9 3l-6 6"/></svg></span><span>Probabilistic &ne; <strong>enterprise-grade</strong></span></li>
+              <li class="pr-item"><span class="pr-glyph pr-glyph--no"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l6 6M9 3l-6 6"/></svg></span><span><strong>Two-year</strong> engineering projects</span></li>
+              <li class="pr-item"><span class="pr-glyph pr-glyph--no"><svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 3l6 6M9 3l-6 6"/></svg></span><span><strong>PoC purgatory</strong></span></li>
+            </ul>
           </div>
 
-          <div class="card card-accent-blue pressure-card" data-animate="scale-in" data-anim-delay="360">
-            <span class="p-index">03</span>
-            <div class="ci ci-blue" style="width:52px;height:52px;" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M25.5 11A10.5 10.5 0 0 0 7 8.5"/>
-                <path d="M6.5 21A10.5 10.5 0 0 0 25 23.5"/>
-                <path d="M7 4v5h5"/>
-                <path d="M25 28v-5h-5"/>
-              </svg>
-            </div>
-            <div class="card-title" style="margin-top:14px;">Transformation</div>
-            <div class="p-lead">Backing the right changes, and knowing they worked.</div>
-            <div class="card-body">Change launches on a business case and is rarely checked against what actually changed.</div>
-            <div class="p-punch">Most change is declared a success. Very little is ever proven to be.</div>
+          <div class="card card-accent-blue pressure-card pr-stat" data-animate="scale-in" data-anim-delay="360">
+            <div class="pr-stat-n">95%</div>
+            <div class="pr-stat-k">of enterprise AI pilots fail before production</div>
+            <div class="pr-stat-src">MIT NANDA, State of AI in Business 2025</div>
           </div>
 
+        </div>
+
+        <div class="s2-statement" data-animate="fade-up" data-anim-delay="440">
+          <div class="statement">The promise is real. <span class="hl">The approach has been wrong.</span></div>
         </div>
       </div>
     </div>
 
-    <!-- ═══ SLIDE 3 · THE COMMON THREAD ═════════════════════════════ -->
+    <!-- ═══ SLIDE 3 · THE 10-20-70 ICEBERG ══════════════════════════ -->
     <div class="slide sd" data-section="The Common Thread">
       <div class="slide-body">
-        <div class="eyebrow" data-animate="fade-up" data-anim-delay="0">The common thread</div>
-        <div class="section-title" data-animate="fade-up" data-anim-delay="60">These decisions have one thing in common.<br/><span style="color:var(--sf-blue-l)">Limited room for error.</span></div>
-        <div class="section-sub" data-animate="fade-up" data-anim-delay="120">And they all need the same thing.</div>
+        <div class="eyebrow" data-animate="fade-up" data-anim-delay="0">Where the value sits</div>
+        <div class="section-title" data-animate="fade-up" data-anim-delay="60">Technology is not the problem.<br/><span style="color:var(--sf-blue-l)">Leaders follow the 10-20-70 principle to create value.</span></div>
 
-        <div class="thread">
-          <div class="card card-accent-blue thread-card" data-animate="scale-in" data-anim-delay="200">
-            <span class="p-index">01</span>
-            <div class="ci ci-blue" style="width:52px;height:52px;" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
-                <rect x="3" y="13" width="7.5" height="6" rx="1"/><rect x="21.5" y="6" width="7.5" height="6" rx="1"/><rect x="21.5" y="20" width="7.5" height="6" rx="1"/>
-                <path d="M10.5 16h5M15.5 16V9h6M15.5 16v7h6"/>
-              </svg>
+        <div class="s3-split">
+          <div>
+            <div class="thread">
+              <div class="card card-accent-blue thread-card tw-row" data-animate="scale-in" data-anim-delay="200">
+                <div class="tw-pct">10%</div>
+                <div class="tw-copy">
+                  <div class="card-title">Algorithms</div>
+                  <div class="thread-text">The models themselves. The part everyone talks about.</div>
+                </div>
+              </div>
+              <div class="card card-accent-blue thread-card tw-row" data-animate="scale-in" data-anim-delay="280">
+                <div class="tw-pct">20%</div>
+                <div class="tw-copy">
+                  <div class="card-title">Technology &amp; data</div>
+                  <div class="thread-text">The platform and the pipes that feed it.</div>
+                </div>
+              </div>
+              <div class="card card-accent-blue thread-card tw-row" data-animate="scale-in" data-anim-delay="360">
+                <div class="tw-pct">70%</div>
+                <div class="tw-copy">
+                  <div class="card-title">People &amp; processes</div>
+                  <div class="thread-text">Where value is actually created &mdash; or quietly lost.</div>
+                </div>
+              </div>
             </div>
-            <div class="card-title">See it</div>
-            <div class="thread-text">How your business actually operates today.</div>
+
+            <div class="cv-node"><span class="cv-node-k">&hellip;but</span><span class="cv-node-big">2 in 3</span> companies struggle to reimagine processes and drive change<span class="cv-node-src">BCG AI Radar 2025 Survey (n=1,803)</span></div>
           </div>
-          <div class="card card-accent-blue thread-card" data-animate="scale-in" data-anim-delay="280">
-            <span class="p-index">02</span>
-            <div class="ci ci-blue" style="width:52px;height:52px;" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
-                <path d="M5 26.5h22"/>
-                <rect x="7" y="18" width="4.2" height="8.5" rx="0.6"/><rect x="13.9" y="12.5" width="4.2" height="14" rx="0.6"/><rect x="20.8" y="7" width="4.2" height="19.5" rx="0.6"/>
-              </svg>
-            </div>
-            <div class="card-title">Size it</div>
-            <div class="thread-text">What your current state is costing you.</div>
-          </div>
-          <div class="card card-accent-blue thread-card" data-animate="scale-in" data-anim-delay="360">
-            <span class="p-index">03</span>
-            <div class="ci ci-blue" style="width:52px;height:52px;" aria-hidden="true">
-              <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round">
-                <line x1="16" y1="4" x2="16" y2="28" stroke-dasharray="2 2.6"/>
-                <path d="M12.5 8.5L5 16l7.5 7.5z"/><path d="M19.5 8.5L27 16l-7.5 7.5z"/>
-              </svg>
-            </div>
-            <div class="card-title">Test it</div>
-            <div class="thread-text">The impact of a change, before you commit.</div>
+
+          <div class="iceberg-wrap" data-animate="fade-up" data-anim-delay="300" aria-hidden="true">
+            <svg class="iceberg" viewBox="0 0 484 470" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="ibWater" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="#0a3aa0" stop-opacity="0.5"/>
+                  <stop offset="1" stop-color="#04102f" stop-opacity="0.1"/>
+                </linearGradient>
+              </defs>
+              <g class="ib-berg">
+                <!-- top slice · 10% (of the berg's height, above water) -->
+                <g class="ib-f ib-above">
+                  <polygon points="196,8 146,53 200,53" fill="#eef6ff" opacity="0.95"/>
+                  <polygon points="196,8 200,53 246,53" fill="#c8e0ff" opacity="0.88"/>
+                  <polygon points="164,28 128,53 172,53" fill="#dcecff" opacity="0.8"/>
+                </g>
+                <!-- second slice · 20% (also above water — 30% total above the line) -->
+                <g class="ib-f ib-band">
+                  <polygon points="128,53 100,144 160,144 146,53" fill="#e6f2ff" opacity="0.9"/>
+                  <polygon points="146,53 160,144 214,144 200,53" fill="#f7fbff" opacity="0.95"/>
+                  <polygon points="200,53 214,144 258,144 246,53" fill="#d3e7ff" opacity="0.88"/>
+                  <polygon points="246,53 258,144 296,144" fill="#b8d9ff" opacity="0.85"/>
+                  <polygon points="146,53 200,53 182,112" fill="#ffffff" opacity="0.35"/>
+                </g>
+                <!-- the submerged mass · 70% -->
+                <g class="ib-f ib-sub">
+                  <polygon points="100,144 66,210 160,230" fill="#2b6fe0" opacity="0.45"/>
+                  <polygon points="100,144 160,230 196,144" fill="#3b82f6" opacity="0.5"/>
+                  <polygon points="196,144 160,230 250,215" fill="#4f9cff" opacity="0.42"/>
+                  <polygon points="196,144 250,215 296,144" fill="#2f74d8" opacity="0.46"/>
+                  <polygon points="296,144 250,215 312,170" fill="#1e56b8" opacity="0.5"/>
+                  <polygon points="296,144 312,170 320,240" fill="#4f9cff" opacity="0.38"/>
+                  <polygon points="250,215 320,240 312,170" fill="#2359bd" opacity="0.45"/>
+                  <polygon points="66,210 84,300 160,230" fill="#1e4fa8" opacity="0.45"/>
+                  <polygon points="160,230 84,300 190,310" fill="#2563c9" opacity="0.48"/>
+                  <polygon points="160,230 190,310 250,215" fill="#2f74d8" opacity="0.44"/>
+                  <polygon points="250,215 190,310 286,330" fill="#1e56b8" opacity="0.46"/>
+                  <polygon points="250,215 286,330 320,240" fill="#16408f" opacity="0.5"/>
+                  <polygon points="84,300 120,390 190,310" fill="#1a49a3" opacity="0.5"/>
+                  <polygon points="190,310 120,390 240,420" fill="#2563c9" opacity="0.46"/>
+                  <polygon points="190,310 240,420 286,330" fill="#2b6fe0" opacity="0.42"/>
+                  <polygon points="286,330 240,420 320,240" fill="#123c86" opacity="0.5"/>
+                  <polygon points="120,390 188,462 240,420" fill="#1a49a3" opacity="0.55"/>
+                </g>
+              </g>
+              <!-- waterline -->
+              <line x1="16" y1="144" x2="464" y2="144" stroke="rgba(143,184,255,0.85)" stroke-width="2"/>
+              <rect x="16" y="145" width="448" height="324" fill="url(#ibWater)"/>
+              <!-- labels -->
+              <g class="ib-label">
+                <path class="ib-lead" d="M240 30 L322 30"/>
+                <text class="ib-pct" x="330" y="37" font-size="22">10%</text>
+                <text class="ib-word" x="330" y="54">Algorithms</text>
+                <path class="ib-lead" d="M282 100 L330 100"/>
+                <text class="ib-pct" x="338" y="107" font-size="24">20%</text>
+                <text class="ib-word" x="338" y="124">Tech &amp; data</text>
+                <path class="ib-lead" d="M310 300 L348 300"/>
+                <text class="ib-pct" x="356" y="308" font-size="32">70%</text>
+                <text class="ib-word" x="356" y="326">People &amp;</text>
+                <text class="ib-word" x="356" y="340">processes</text>
+              </g>
+            </svg>
           </div>
         </div>
 
-        <svg class="cv-link" viewBox="0 0 1000 96" preserveAspectRatio="none" aria-hidden="true">
-          <path class="cv-drop" d="M161 0 L161 44"/>
-          <path class="cv-drop" d="M500 0 L500 44"/>
-          <path class="cv-drop" d="M839 0 L839 44"/>
-          <path class="cv-bus cv-bus-l" d="M161 44 L500 44"/>
-          <path class="cv-bus cv-bus-r" d="M839 44 L500 44"/>
-          <path class="cv-stem" d="M500 44 L500 96"/>
-          <circle class="cv-dot" cx="161" cy="2" r="4"/>
-          <circle class="cv-dot" cx="500" cy="2" r="4"/>
-          <circle class="cv-dot" cx="839" cy="2" r="4"/>
-        </svg>
-        <div class="cv-node"><span class="cv-node-k">Together</span>Everything you need to make informed decisions.</div>
-
         <div class="s3-tagline">
           <div class="rule-accent"></div>
-          <div class="statement">It all starts with <span class="hl">understanding.</span></div>
+          <div class="statement">The algorithm is the tip. <span class="hl">The value is underwater.</span></div>
         </div>
       </div>
     </div>
@@ -827,7 +904,7 @@
     </div>
 
     <!-- ═══ SLIDE 7 · WHY NOW — the task-mining time asymmetry ═══════ -->
-    <div class="slide sd" data-section="Why Now">
+    <div class="slide sd deck-hidden" data-section="Why Now">
       <div class="slide-body">
         <div class="eyebrow" data-animate="fade-up" data-anim-delay="0">Timing</div>
         <div class="section-title" data-animate="fade-up" data-anim-delay="60">Why act now?<br/><span style="color:var(--sf-blue-l)">Because evidence can&rsquo;t be backdated.</span></div>
@@ -951,7 +1028,7 @@
     </div>
 
     <!-- ═══ SLIDE 9 · EITHER WAY — knowledge is power. Apromore gives you both. ═ -->
-    <div class="slide sd" data-section="Either Way">
+    <div class="slide sd deck-hidden" data-section="Either Way">
       <div class="slide-body">
         <div class="eyebrow" data-animate="fade-up" data-anim-delay="0">The decision</div>
         <div class="section-title" data-animate="fade-up" data-anim-delay="60">An easy decision.<br/><span style="color:var(--sf-blue-l)">Either way, you win.</span></div>
@@ -1013,22 +1090,6 @@
        unlocks audio, so no separate "click to start" prompt is needed.
        Reopen any time with the gear button or Esc. -->
   <div id="setup" class="setup-cover">
-    <!-- Oversized Apromore mark, slowly orbiting behind the setup content -->
-    <svg class="setup-mark" viewBox="0 0 300 300" aria-hidden="true">
-      <g fill="none" stroke-linecap="round" stroke-width="8">
-        <path d="M168.7,62 A90,90 0 0 1 238,131.3" stroke="#F6A21D"/>
-        <path d="M238,168.7 A90,90 0 0 1 168.7,238" stroke="#7CC3E8"/>
-        <path d="M131.3,238 A90,90 0 0 1 62,168.7" stroke="#F05A22"/>
-        <path d="M62,131.3 A90,90 0 0 1 131.3,62" stroke="#CFE6F2"/>
-      </g>
-      <circle cx="150" cy="150" r="38" fill="#C0334E"/>
-      <g class="sm-orbit">
-        <circle cx="150" cy="60" r="22" fill="#F6A21D"/>
-        <circle cx="240" cy="150" r="22" fill="#7CC3E8"/>
-        <circle cx="150" cy="240" r="22" fill="#F05A22"/>
-        <circle cx="60" cy="150" r="22" fill="#CFE6F2"/>
-      </g>
-    </svg>
     <div class="setup-inner">
       <div class="setup-eyebrow">Before we start</div>
       <h2 class="setup-title">How would you like to experience Apromore?</h2>
