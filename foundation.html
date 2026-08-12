@@ -1227,7 +1227,10 @@
         } else {
           applyThreadSpot();
           beatChanged();
-          if (tBeat === 4) armThreadReveal();   // cue the reveal ~0.8s before B04 ends
+          // Autoplay cues the reveal ~0.8s before B04 ends so the line draw lands
+          // with the narration. In manual mode beat 4 HOLDS — the presenter's next
+          // arrow fires the reveal via the skip-ahead branch above.
+          if (tBeat === 4 && autoplayOn) armThreadReveal();
         }
       } else if (isLayers(current)) {
         postIframe(slides[current], { type: 'deck-advance' });   // iframe steps, or replies deck-next
@@ -1474,10 +1477,12 @@
     // During autoplay, a clip finishing drives the advance — a short breath, then
     // the deck moves on. pendingAudioAdvance / autoToken (set in scheduleAuto)
     // guard against double-advancing if the backstop timer also fires.
-    // More beats left to play inside the current slide? (auto-sequences in any mode)
+    // Manual mode: which slides keep playing their own beats once a clip ends.
+    // The Pressures (2) and The Common Thread (3) are presenter-paced — the
+    // arrow key steps their beats — so only Either Way auto-sequences here.
+    // Autoplay is unaffected: it drives every beat through scheduleAuto.
     function inSlideBeatsRemain() {
-      return (isPressures(current) && pBeat < P_BEATS) || (isThread(current) && tBeat < T_BEATS)
-          || (isEither(current) && eBeat < E_BEATS);
+      return isEither(current) && eBeat < E_BEATS;
     }
 
     narration.addEventListener('ended', () => {
