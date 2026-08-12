@@ -1222,6 +1222,28 @@
   const FINALE = STEPS + 1;                   // closing frame: the whole stack, lit
   const ALL = LAYERS.concat([FOUNDATION]);    // index aligned with focus steps 1..7
 
+  // ── Deck variant ───────────────────────────────────────────────
+  // The deck forwards its ?v= flag so the bridging question can speak to the
+  // room it's being asked in. The standard deck asks about fixing; the M&A
+  // deck asks about pricing, which is the verb that matters when the decision
+  // is whether to buy or sell.
+  // Each version MUST carry exactly four `hl mw` words — they collapse into the
+  // four brand balls, and runIntroMorph falls straight through to layer 1 if it
+  // finds any other number. The finale answers with the same two verbs, so the
+  // words that opened the section are the ones that close it.
+  const PI_VARIANT = new URLSearchParams(location.search).get('v') || 'std';
+  const INTRO_COPY = {
+    std: {
+      line: '<span class="intro-l1">You can&rsquo;t <span class="hl mw">fix</span> what you can&rsquo;t <span class="hl mw">see</span>.</span><span class="intro-div"></span><span class="intro-l2">And you can&rsquo;t <span class="hl mw">prove</span> what you can&rsquo;t <span class="hl mw">measure</span>.</span>',
+      close: '<span class="hl">...so you can fix it, and prove it.</span>',
+    },
+    ma: {
+      line: '<span class="intro-l1">You can&rsquo;t <span class="hl mw">price</span> what you can&rsquo;t <span class="hl mw">see</span>.</span><span class="intro-div"></span><span class="intro-l2">And you can&rsquo;t <span class="hl mw">prove</span> what you can&rsquo;t <span class="hl mw">measure</span>.</span>',
+      close: '<span class="hl">...so you can price it, and prove it.</span>',
+    },
+  };
+  const INTRO = INTRO_COPY[PI_VARIANT] || INTRO_COPY.std;
+
   // ── Task Mining animation (the work between the systems) ────────
   // One SVG (viewBox 1000×560). The systems panel opens left (carried over from
   // Process Mining), the four desktop tools — real app logos, white-cut in
@@ -2757,9 +2779,9 @@
     // Step 0 poses the bridging claim; steps 1+ carry the layer's claim
     // ("Process Mining: See how you actually run.") with the claim in accent blue.
     capTitle.innerHTML = step === 0
-      ? '<span class="intro-l1">You can&rsquo;t <span class="hl mw">fix</span> what you can&rsquo;t <span class="hl mw">see</span>.</span><span class="intro-div"></span><span class="intro-l2">And you can&rsquo;t <span class="hl mw">prove</span> what you can&rsquo;t <span class="hl mw">measure</span>.</span>'
+      ? INTRO.line
       : step === FINALE
-        ? '<span class="hl">...so you can fix it, and prove it.</span>'
+        ? INTRO.close
         : ALL[step - 1].name + ': <span class="hl">' + ALL[step - 1].claim + '</span>';
     capSub.innerHTML = step === 0
       ? ''
@@ -2863,7 +2885,7 @@
     if (!capTitle.querySelector('.fin-q')) { render(); return; }
     const q = capTitle.querySelector('.fin-q'); q.classList.add('fin-out');
     FT(() => {
-      capTitle.innerHTML = '<span class="hl">...so you can fix it, and prove it.</span>';
+      capTitle.innerHTML = INTRO.close;
       capTitle.classList.remove('cap-bounce'); void capTitle.offsetWidth; capTitle.classList.add('cap-bounce');
       app.classList.add('finale-go');
       FT(() => {
@@ -2913,7 +2935,8 @@
     introPhase = 1;
     const words = [...capTitle.querySelectorAll('.mw')];
     if (words.length !== 4) { goTo(1); return; }   // safety: fall straight through
-    // word → ball: fix=amber top, see=sky right, prove=ice left, measure=orange bottom
+    // word → ball, in DOM order: fix/price=amber top, see=sky right,
+    // prove=ice left, measure=orange bottom (see INTRO_COPY)
     const BALL = [
       { c: '#F6A21D', a: -90 },
       { c: '#7CC3E8', a: 0   },

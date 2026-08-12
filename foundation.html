@@ -1054,6 +1054,11 @@
     document.querySelectorAll('[data-variant]').forEach(el => {
       if (el.dataset.variant !== DECK_VARIANT) el.remove();
     });
+    // Forward the variant into the embedded slides so their copy can speak to
+    // the same room (slide 6's bridging line reads differently for M&A).
+    if (DECK_VARIANT !== 'std') {
+      document.querySelectorAll('.slide-embed iframe').forEach(f => { f.src = f.src + '&v=' + encodeURIComponent(DECK_VARIANT); });
+    }
 
     // Visible slides only — filter by class (not computed display) so the mobile
     // media query that hides inactive slides via `display: none` doesn't remove them.
