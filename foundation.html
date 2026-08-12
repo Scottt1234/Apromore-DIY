@@ -681,7 +681,11 @@
         <div class="section-sub" data-animate="fade-up" data-anim-delay="120">Most organisations are facing at least one of these right now. Many are facing all three.</div>
         <div class="card-grid-3">
 
-          <div class="card card-accent-blue pressure-card" data-animate="scale-in" data-anim-delay="200">
+          <!-- Card 1 has two versions — see DECK_VARIANT below. The standard deck
+               leads on AI Deployment; ?v=ma swaps in Mergers & Acquisitions. The
+               unused one is removed at load, so only one ever reaches the beat
+               spotlight logic. -->
+          <div class="card card-accent-blue pressure-card" data-variant="std" data-animate="scale-in" data-anim-delay="200">
             <span class="p-index">01</span>
             <div class="ci ci-blue" style="width:52px;height:52px;" aria-hidden="true">
               <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6">
@@ -695,6 +699,19 @@
             <div class="p-punch">Almost everyone&rsquo;s AI will go live.<br/>Not everyone&rsquo;s will matter.</div>
           </div>
 
+          <div class="card card-accent-blue pressure-card" data-variant="ma" data-animate="scale-in" data-anim-delay="200">
+            <span class="p-index">01</span>
+            <div class="ci ci-blue" style="width:52px;height:52px;" aria-hidden="true">
+              <svg width="28" height="28" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6">
+                <circle cx="12.5" cy="16" r="7.5"/><circle cx="19.5" cy="16" r="7.5"/>
+              </svg>
+            </div>
+            <div class="card-title" style="margin-top:14px;">Mergers &amp; Acquisitions</div>
+            <div class="p-lead">Knowing what you&rsquo;re buying. Or what you&rsquo;re selling.</div>
+            <div class="card-body">Both sides negotiate from the same financials. Neither can see where the operational value actually sits.</div>
+            <div class="p-punch">Buyers pay for potential.<br/>Sellers give it away.</div>
+          </div>
+
           <div class="card card-accent-blue pressure-card" data-animate="scale-in" data-anim-delay="280">
             <span class="p-index">02</span>
             <div class="ci ci-blue" style="width:52px;height:52px;" aria-hidden="true">
@@ -704,7 +721,7 @@
                 <circle cx="16" cy="8.3" r="1.5" fill="currentColor" stroke="none"/>
               </svg>
             </div>
-            <div class="card-title" style="margin-top:14px;">Cost Pressure</div>
+            <div class="card-title" style="margin-top:14px;">Cost Optimisation</div>
             <div class="p-lead">Reducing cost without reducing capability.</div>
             <div class="card-body">Cost decisions are moving faster than the data that should support them.</div>
             <div class="p-punch">The most expensive cuts are the ones you have to reverse.</div>
@@ -1025,6 +1042,18 @@
     if (new URLSearchParams(location.search).get('nosubs') === '1') {
       document.querySelectorAll('.slide-embed iframe').forEach(f => { f.src = f.src + '&nosubs=1'; });
     }
+
+    // ── Deck variant ─────────────────────────────────────────────────
+    // Some decks need a different card for a single audience. Every version
+    // lives in the markup tagged data-variant; the ones that don't match are
+    // removed here, BEFORE anything reads the DOM, so the rest of the deck
+    // never has to know a variant existed.
+    //   (default)  standard deck — slide 2 leads on AI Deployment
+    //   ?v=ma      M&A deck      — slide 2 leads on Mergers & Acquisitions
+    const DECK_VARIANT = new URLSearchParams(location.search).get('v') || 'std';
+    document.querySelectorAll('[data-variant]').forEach(el => {
+      if (el.dataset.variant !== DECK_VARIANT) el.remove();
+    });
 
     // Visible slides only — filter by class (not computed display) so the mobile
     // media query that hides inactive slides via `display: none` doesn't remove them.
@@ -1566,7 +1595,13 @@
       if (current === 0) {
         name = 'S01B00';                                  // slide 1 (hero) uses a beat-named clip
       } else if (isPressures(current)) {
-        name = 'S02B' + String(pBeat).padStart(2, '0');   // S02B01–04, one per beat
+        // Beat 2 narrates card 1, which the M&A variant replaces — so that beat
+        // asks for its own clip. Not yet recorded, so it resolves to null and
+        // the beat plays silent; drop S02MB02.mp3 in and add it to AUDIO_FILES
+        // to give it a voice. Every other beat is shared.
+        name = (DECK_VARIANT === 'ma' && pBeat === 2)
+          ? 'S02MB02'
+          : 'S02B' + String(pBeat).padStart(2, '0');   // S02B01–04, one per beat
       } else if (isThread(current)) {
         name = 'S03B' + String(tBeat).padStart(2, '0');   // S03B01–05, one per beat
       } else if (isEither(current)) {

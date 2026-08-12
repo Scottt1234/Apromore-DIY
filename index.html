@@ -20,7 +20,10 @@
     .wrap { opacity: 0.9; }
     .sub { opacity: 0.6; font-size: 14px; margin-top: 10px; }
   </style>
-  <script>location.replace('foundation.html');</script>
+  <!-- Carry the query string through, so /?v=ma reaches the deck as the variant
+       flag instead of silently landing on the standard deck. The meta refresh
+       above can't forward it and stays a no-JS fallback to the standard deck. -->
+  <script>location.replace('foundation.html' + location.search);</script>
 </head>
 <body>
   <div class="wrap">
